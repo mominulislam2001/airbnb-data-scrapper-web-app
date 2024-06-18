@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Airbnb Scraper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-exampleHash" crossorigin="anonymous" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .summary-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7fd;
+            border-radius: 10px;
+            border: 1px solid #d3e4eb;
+        }
+
+        .summary-container h2 {
+            margin-bottom: 10px;
+            color: #007bff;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            flex: 1;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .summary-item i {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+        .summary-item label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .summary-item span {
+            font-size: 16px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Adjusted to evenly space elements */
+        }
+
+        .search-bar label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .search-bar hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 15px 0;
+        }
+
+        .search-bar input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-right: 10px; /* Added margin to separate from button */
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 40px;
+        }
+
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+
+        .loading-container {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: none;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<label for="locations">Enter Locations to Fetch </label>
+</div>
+<br>
+<div class="container">
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="search-bar">
+        <form id="scrapeForm" action="/scrape_all" method="post" onsubmit="showLoading()" style="display: flex; align-items: center; width: 100%;">
+            
+            <hr>
+            <input type="text" id="locations" name="locations" placeholder="Enter locations...">
+            <div style="display: none;">
+                <label for="xpath_filename">XPath Filename:</label>
+                <input type="text" id="xpath_filename" name="xpath_filename" value="xpaths/airbnb_xpaths.json">
+            </div>
+            <button type="submit">Fetch Data</button>
+        </form>
+    </div>
+</div>
+
+<br>
+
+<div class="container">
+    <h2>Summary</h2>
+    <div class="summary-container">
+        
+        <div class="summary-grid">
+            <div class="summary-item">
+                <i class="fas fa-home"></i>
+                <label>Total Listings Scraped:</label>
+                <span>{{ total_listings }}</span>
+            </div>
+            <div class="summary-item">
+                <i class="fas fa-plus-circle"></i>
+                <label>New Listings Found:</label>
+                <span>{{ new_listings }}</span>
+            </div>
+            <div class="summary-item">
+                <i class="fas fa-user"></i>
+                <label>Total Hosts Scraped:</label>
+                <span>{{ total_hosts }}</span>
+            </div>
+            <div class="summary-item">
+                <i class="fas fa-comments"></i>
+                <label>Total Reviews Scraped:</label>
+                <span>{{ total_reviews }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById('loadingContainer').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
